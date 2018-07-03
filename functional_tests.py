@@ -8,6 +8,7 @@ class NewVisitorTest(unittest.TestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
+		#self.browser.implicitly_wait(3)
 
 	def tearDown(self):
 		self.browser.quit()
@@ -17,16 +18,33 @@ class NewVisitorTest(unittest.TestCase):
 		self.browser.get('http://localhost:8000')
 
 		# Title of the web app shows "TO-DO"
-		assert 'To-Do lists' in self.browser.title
+		self.assertIn('To-Do', self.browser.title)
+		header_text = self.browser.find_element_by_tag_name('h1').text
+		self.assertIn('To-Do', header_text)
 
 		# She is invited to add one item
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertEqual(
+			inputbox.get_attribute('placeholder'),
+			'Enter a to-do item'
+		)
 
 		# She enters an item - app development study plan
+		item1 = 'Making App Development Study Plan'
+		inputbox.send_keys(item1)
 
 		# After 'enter' key pressed, this item is added into a to-do list
+		inputbox.send_keys(Keys.ENTER)
+
+		table = self.browser.find_element_by_tag_name('tr')
+		rows = table.find_elements_by_tag_name('tr')
+		self.assertTrue(
+			any(row.text == ('1: ' + item1) for row in rows)
+		)
 
 		# She can enter another item
 		# She enters 'OOP Concepts Study'
+		self.fail('Finish the test!')
 
 		# Now she has two items on the list
 
