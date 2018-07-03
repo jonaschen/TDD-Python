@@ -17,7 +17,7 @@ class NewVisitorTest(unittest.TestCase):
 		self.browser.get('http://localhost:8000')
 
 		# Title of the web app shows "TO-DO"
-		assert 'To-Do' in self.browser.title
+		assert 'To-Do lists' in self.browser.title
 
 		# She is invited to add one item
 
