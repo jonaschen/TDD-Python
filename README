@@ -1,2 +1,13 @@
 Reference:
 	Test-Driven Development with Python by Harry J.W. Percival
+
+
+Quick Note:
+	1. from django.shortcuts import render
+	   render(request, template_name, context=None, content_type=None, status=None, using=None)
+
+	   Combines a given template with a given context dictionary and returns an HttpResponse object with that rendered text.
+
+	2. render_to_string() loads a template (ex:home.html) and calls its render() method immediately.
+
+

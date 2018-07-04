@@ -9,7 +9,7 @@ class NewVisitorTest(unittest.TestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
-		#self.browser.implicitly_wait(3)
+		self.browser.implicitly_wait(3)
 
 	def tearDown(self):
 		self.browser.quit()
@@ -45,11 +45,19 @@ class NewVisitorTest(unittest.TestCase):
 
 		# She can enter another item
 		# She enters 'OOP Concepts Study'
-		self.fail('Finish the test!')
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		item2 = 'OOP Concepts Study'
+		inputbox.send_keys(item2)
+		inputbox.send_keys(Keys.ENTER)
 
 		# Now she has two items on the list
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_elements_by_tag_name('tr')
+		self.assertIn('1: ' + item1, [row.text for row in rows])
+		self.assertIn('2: ' + item2, [row.text for row in rows])
 
 		# The app gives her an unique URL
+		self.fail('Finish the test!')
 
 		# She can goto the URL to check her to-do list
 
