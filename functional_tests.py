@@ -14,6 +14,12 @@ class NewVisitorTest(unittest.TestCase):
 	def tearDown(self):
 		self.browser.quit()
 
+	# FIXME: this function can be used for a specific table only
+	def check_for_row_in_list_table(self, row_text):
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_elements_by_tag_name('tr')
+		self.assertIn(row_text, [row.text for row in rows])
+
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		# Edith wants to add items in the todo list
 		self.browser.get('http://localhost:8000')
@@ -37,11 +43,12 @@ class NewVisitorTest(unittest.TestCase):
 		# After 'enter' key pressed, this item is added into a to-do list
 		inputbox.send_keys(Keys.ENTER)
 
-		table = self.browser.find_element_by_id('id_list_table')
-		rows = table.find_elements_by_tag_name('tr')
-		self.assertTrue(
-			any(row.text == ('1: ' + item1) for row in rows)
-		)
+		self.check_for_row_in_list_table(('1: ' + item1))
+		#table = self.browser.find_element_by_id('id_list_table')
+		#rows = table.find_elements_by_tag_name('tr')
+		#self.assertTrue(
+		#	any(row.text == ('1: ' + item1) for row in rows)
+		#)
 
 		# She can enter another item
 		# She enters 'OOP Concepts Study'
@@ -51,10 +58,12 @@ class NewVisitorTest(unittest.TestCase):
 		inputbox.send_keys(Keys.ENTER)
 
 		# Now she has two items on the list
-		table = self.browser.find_element_by_id('id_list_table')
-		rows = table.find_elements_by_tag_name('tr')
-		self.assertIn('1: ' + item1, [row.text for row in rows])
-		self.assertIn('2: ' + item2, [row.text for row in rows])
+		self.check_for_row_in_list_table(('1: ' + item1))
+		self.check_for_row_in_list_table(('2: ' + item2))
+		#table = self.browser.find_element_by_id('id_list_table')
+		#rows = table.find_elements_by_tag_name('tr')
+		#self.assertIn('1: ' + item1, [row.text for row in rows])
+		#self.assertIn('2: ' + item2, [row.text for row in rows])
 
 		# The app gives her an unique URL
 		self.fail('Finish the test!')
