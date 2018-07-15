@@ -33,14 +33,8 @@ class HomePageTest(TestCase):
 		new_item = Item.objects.first()
 		self.assertEqual(new_item.text, item_text)
 
-		self.assertIn('A new list item', response.content.decode())
-		expected_html = render_to_string(
-			'home.html',
-			{'new_item_text': item_text}
-		)
-		self.assertEqual(response.content.decode(), expected_html)
-
-		# TODO: Isn't this test function too long?
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response['location'], '/')
 
 	def test_home_page_only_saves_items_when_necessary(self):
 		request = HttpRequest()
