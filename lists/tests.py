@@ -42,6 +42,11 @@ class HomePageTest(TestCase):
 
 		# TODO: Isn't this test function too long?
 
+	def test_home_page_only_saves_items_when_necessary(self):
+		request = HttpRequest()
+		home_page(request)
+		self.assertEqual(Item.objects.count(), 0)
+
 class ItemModelTest(TestCase):
 
 	def test_saving_and_retrieving_items(self):
