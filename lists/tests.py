@@ -22,19 +22,25 @@ class HomePageTest(TestCase):
 		self.assertEqual(response.content.decode(), expected_html)
 
 	def test_home_page_can_save_a_POST_request(self):
+		item_text = 'A new list item'
 		request = HttpRequest()
 		request.method = 'POST'
-		request.POST['item_text'] = 'A new list item'
+		request.POST['item_text'] = item_text
 
 		response = home_page(request)
+
+		self.assertEqual(Item.objects.count(), 1)
+		new_item = Item.objects.first()
+		self.assertEqual(new_item.text, item_text)
 
 		self.assertIn('A new list item', response.content.decode())
 		expected_html = render_to_string(
 			'home.html',
-			{'new_item_text': 'A new list item'}
+			{'new_item_text': item_text}
 		)
 		self.assertEqual(response.content.decode(), expected_html)
 
+		# TODO: Isn't this test function too long?
 
 class ItemModelTest(TestCase):
 
