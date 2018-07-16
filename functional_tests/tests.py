@@ -3,12 +3,13 @@
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
-import unittest
+from django.test import LiveServerTestCase
+
 import time
 
 MAX_WAIT = 5
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
@@ -39,7 +40,7 @@ class NewVisitorTest(unittest.TestCase):
 
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		# Edith wants to add items in the todo list
-		self.browser.get('http://localhost:8000')
+		self.browser.get(self.live_server_url)
 
 		# Title of the web app shows "TO-DO"
 		self.assertIn('To-Do', self.browser.title)
@@ -77,15 +78,4 @@ class NewVisitorTest(unittest.TestCase):
 		self.fail('Finish the test!')
 
 		# She can goto the URL to check her to-do list
-
-
-if __name__ == '__main__':
-	unittest.main(warnings='ignore')
-
-
-
-
-
-
-
 
