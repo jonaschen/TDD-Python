@@ -61,6 +61,10 @@ class NewVisitorTest(LiveServerTestCase):
 		# After 'enter' key pressed, this item is added into a to-do list
 		inputbox.send_keys(Keys.ENTER)
 
+		# She will be redirected to another URL
+		# Now she can see the new to-do item on the list
+		edith_list_url = self.browser.current_url
+		self.assertRegex(edith_list_url, '/lists/.+')
 		self.wait_for_row_in_list_table(('1: ' + item1))
 
 		# She can enter another item
@@ -74,8 +78,40 @@ class NewVisitorTest(LiveServerTestCase):
 		self.wait_for_row_in_list_table(('1: ' + item1))
 		self.wait_for_row_in_list_table(('2: ' + item2))
 
-		# The app gives her an unique URL
+		#
+		# Then, another user, Francis, comes to visit the to-do list app
+		#
+
+		## We use a new working session to make sure
+		## Edith's information will not be exposed to other users
+		## by cookies or any mechanism
+		self.browser.quit()
+		self.browser = webdriver.Firefox()
+
+		# Francis visit home page, nothing from Edith's data
+		self.browser.get(self.live_server_url)
+		page_text = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn(item1, page_text)
+		self.assertNotIn(item2, page_text)
+
+		# Francis enters a new item, build a new list
+		# he is more boring than Edith...
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox.send_keys('Buy milk')
+		inputbox.send_keys(Keys.ENTER)
+
+		# Francis gets his own unique URL
+		francis_list_url = self.browser.current_url
+		self.assertRegex(francis_list_url, '/lists/.+')
+		self.assertNotEqual(francis_list_url, edith_list_url)
+
+		# There should be nothing about Edith
+		page_text = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn(item1)
+		self.assertIn('Buy milk')
+
+
+		# Francis is satisfied now
 		self.fail('Finish the test!')
 
-		# She can goto the URL to check her to-do list
 
